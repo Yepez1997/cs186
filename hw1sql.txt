@@ -28,6 +28,14 @@ AS
 
 ;
 
+-- Question 1iv
+CREATE VIEW q1iv(birthyear, avgheight, count)
+AS
+  SELECT birthyear, AVG(height), COUNT(birthyear)
+        FROM people
+        GROUP BY birthyear
+        HAVING COUNT(height) > 70 ORDER BY birthyear
+;
 
 
 
