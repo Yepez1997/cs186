@@ -1,4 +1,4 @@
--- Question 0
+- Question 0
 CREATE VIEW q0(era)
 AS
   SELECT MAX(era)
@@ -35,6 +35,16 @@ AS
         FROM people
         GROUP BY birthyear
         HAVING COUNT(height) > 70 ORDER BY birthyear
+;
+
+-- Question 2i
+CREATE VIEW q2i(namefirst, namelast, playerid, yearid)
+AS
+   SELECT p.namefirst, p.namelast, s.playerid, s.yearid 
+        FROM people AS p INNER JOIN halloffame AS s ON
+        p.playerid = s.playerid 
+        WHERE s.inducted = 'Y' 
+        ORDER BY s.yearid DESC
 ;
 
 
