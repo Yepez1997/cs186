@@ -54,4 +54,19 @@ AS
         FROM collegeplaying AS c, people AS p INNER JOIN halloffame AS s ON
         p.playerid = s.playerid
         WHERE s.inducted = 'Y' AND c.playerid = p.playerid
-        AND p.playerid IN ( SELECT c.playerid FROM collegeplaying AS c INNER JOIN schools AS sc ON c.schoolid = sc.schoolid WHERE sc.schoolstate LIKE '%CA%') ORDER BY  s.yearid DESC;
+        AND p.playerid IN ( SELECT c.playerid FROM collegeplaying AS c INNER JOIN schools AS sc ON 		c.schoolid = sc.schoolid WHERE sc.schoolstate LIKE '%CA%') 
+			ORDER BY  s.yearid DESC;
+
+-- Question 2iii
+CREATE VIEW q2iii(playerid, namefirst, namelast, schoolid)
+AS
+ SELECT p.playerid, p.namefirst, p.namelast, c.schoolid
+    	FROM collegeplaying AS c RIGHT OUTER JOIN people AS p ON
+  	  	p.playerid = c.playerid 
+	  	WHERE p.playerid IN  (SELECT p.playerid FROM people AS p INNER JOIN halloffame AS s ON
+        p.playerid = s.playerid
+        WHERE s.inducted = 'Y')
+			ORDER BY p.playerid;
+;
+
+
