@@ -46,15 +46,12 @@ AS
         WHERE s.inducted = 'Y' 
         ORDER BY s.yearid DESC
 ;
-
-
-
-
-
-
-
-
-
-
-
-
+-- Question 2ii
+CREATE VIEW q2ii(namefirst, namelast, playerid, schoolid, yearid)
+AS
+   	
+  SELECT DISTINCT p.namefirst, p.namelast, s.playerid,c.schoolid, s.yearid
+        FROM collegeplaying AS c, people AS p INNER JOIN halloffame AS s ON
+        p.playerid = s.playerid
+        WHERE s.inducted = 'Y' AND c.playerid = p.playerid
+        AND p.playerid IN ( SELECT c.playerid FROM collegeplaying AS c INNER JOIN schools AS sc ON c.schoolid = sc.schoolid WHERE sc.schoolstate LIKE '%CA%') ORDER BY  s.yearid DESC;
