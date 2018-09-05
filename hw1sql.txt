@@ -69,6 +69,50 @@ AS
 			ORDER BY p.playerid, c.schoolid ASC ;
 ;
 
+-- Question 3i
+CREATE VIEW q3i(playerid, namefirst, namelast, yearid, slg)
+AS
+  SELECT p.playerid, p.namefirst, p.namelast, b.yearid, ((b.h - b.h2b - b.h3b - b.hr) + (2*b.h2b) + 	(3*b.h3b) + (4*b.hr))/(cast(b.ab as real)) as slg
+     FROM people AS p INNER JOIN batting as b ON
+   p.playerid = b.playerid
+   WHERE b.ab > 50
+   ORDER BY slg DESC, b.yearid,p.playerid ASC LIMIT 10;
+;
+
+-- Question 3ii
+CREATE VIEW q3ii(playerid, namefirst, namelast, lslg)
+AS
+  SELECT p.playerid, p.namefirst, p.namelast, (b.h + 2*b.h2b + 3*b.h3b + 4*b.hr)/(b.ab) as slg
+    FROM people AS p INNER JOIN batting as b ON
+  p.playerid = b.playerid
+  WHERE b.ab > 50
+  
+;
+
+-- Question 3iii
+CREATE VIEW q3iii(namefirst, namelast, lslg)
+AS
+  SELECT 1, 1, 1 -- replace this line
+;
+
+-- Question 4i
+CREATE VIEW q4i(yearid, min, max, avg, stddev)
+AS
+  SELECT 1, 1, 1, 1, 1 -- replace this line
+;
+
+-- Question 4ii
+CREATE VIEW q4ii(binid, low, high, count)
+AS
+  SELECT 1, 1, 1, 1 -- replace this line
+;
+
+-- Question 4iii
+CREATE VIEW q4iii(yearid, mindiff, maxdiff, avgdiff)
+AS
+  SELECT 1, 1, 1, 1 -- replace this line
+;
+
 
 
 
