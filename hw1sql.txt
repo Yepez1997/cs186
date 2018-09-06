@@ -81,11 +81,14 @@ AS
 
 -- Question 3ii
 CREATE VIEW q3ii(playerid, namefirst, namelast, lslg)
-AS
-  SELECT p.playerid, p.namefirst, p.namelast, (b.h + 2*b.h2b + 3*b.h3b + 4*b.hr)/(b.ab) as slg
-    FROM people AS p INNER JOIN batting as b ON
-  p.playerid = b.playerid
-  WHERE b.ab > 50
+AS  
+  SELECT p.playerid, p.namefirst, p.namelast,SUM((b.h - b.h2b - b.h3b - b.hr) + (2*b.h2b) + (3*b.h3b) + (4*b.hr))/(cast(SUM(b.ab) as real)) as lslg
+     FROM people AS p INNER JOIN batting as b ON
+   p.playerid = b.playerid
+   WHERE b.ab > 0
+   GROUP BY p.playerid
+   HAVING (SUM(b.ab) > 50)
+   ORDER BY lslg DESC, p.playerid ASC LIMIT 10
   
 ;
 
