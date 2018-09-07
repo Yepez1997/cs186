@@ -111,7 +111,9 @@ AS
 -- Question 4i
 CREATE VIEW q4i(yearid, min, max, avg, stddev)
 AS
-  SELECT 1, 1, 1, 1, 1 -- replace this line
+	-- SELECT 
+  WITH std AS (SELECT yearid, STDDEV(salary) from salaries GROUP BY yearid) 
+  SELECT o.yearid, min(o.salary),max(o.salary), max(s.stddev) FROM salaries as o INNER JOIN std as s ON o.yearid = s.yearid GROUP BY 	o.yearid ORDER BY o.yearid;
 ;
 
 -- Question 4ii
