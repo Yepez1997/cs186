@@ -75,7 +75,7 @@ AS
 	  	WHERE p.playerid IN  (SELECT p.playerid FROM people AS p INNER JOIN halloffame AS s ON
         p.playerid = s.playerid
         WHERE s.inducted = 'Y')
-			ORDER BY p.playerid, c.schoolid ASC 
+			ORDER BY p.playerid DESC, c.schoolid ASC 
 ;
 
 -- Question 3i
@@ -119,17 +119,31 @@ AS
 -- Question 4i
 CREATE VIEW q4i(yearid, min, max, avg, stddev)
 AS
-  WITH std AS (SELECT yearid, STDDEV(salary) from salaries GROUP BY yearid) 
+  WITH STD AS (SELECT yearid, STDDEV(salary) from salaries GROUP BY yearid) 
   SELECT o.yearid, min(o.salary),max(o.salary), avg(o.salary), max(s.stddev) 
-		FROM salaries as o INNER JOIN std as s ON o.yearid = s.yearid GROUP BY o.yearid ORDER BY o.yearid
+		FROM salaries as o INNER JOIN STD as s ON o.yearid = s.yearid GROUP BY o.yearid ORDER BY o.yearid
 
 ;
 
 -- Question 4ii
 CREATE VIEW q4ii(binid, low, high, count)
 AS
-  SELECT 1, 1, 1, 1 -- replace this line
+  WITH SALARIES2016 AS (SELECT MIN(s.salary), MAX(s.salary)
+             FROM salaries AS s WHERE s.yearid = '2016'
+  ), BINS AS (SELECT i AS binid, 
+                  i*(SALARIES2016.max-SALARIES2016.min)/10.0 + SALARIES2016.min AS low,
+                  (i+1)*(SALARIES2016.max-SALARIES2016.min)/10.0 + SALARIES2016.min AS high
+           FROM generate_series(0,9) AS i, SALARIES2016)
+  SELECT binid, low, high, COUNT(*) 
+  FROM BINS INNER JOIN salaries AS s 
+         ON s.salary >= BINS.low 
+            AND (s.salary < BINS.high OR binid = 9 AND s.salary <= BINS.high)
+            AND yearid = '2016'
+  GROUP BY binid, low, high
+  ORDER BY binid ASC
 ;
+
+
 
 -- Question 4iii
 CREATE VIEW q4iii(yearid, mindiff, maxdiff, avgdiff)
@@ -139,8 +153,8 @@ AS
 		nextsal.min - currentsal.min AS mindiff,
 		nextsal.max - currentsal.max AS maxdiff,
 		nextsal.avg - currentsal.avg AS avgdiff
-  FROM CURRENTSALARY AS currentsal INNER JOIN CURRENTSALARY AS nextsal ON 
-  nextsal.yearid = currentsal.yearid + 1
+  FROM CURRENTSALARY AS currentsal INNER JOIN CURRENTSALARY AS nextsal 
+  ON nextsal.yearid = currentsal.yearid + 1
   ORDER BY nextsal.yearid ASC
 
 ;
@@ -151,21 +165,24 @@ AS
 	WITH TWOTHOU AS (SELECT playerid, yearid, salary FROM salaries WHERE yearid = 2000 AND salary = (SELECT max(salary) from salaries WHERE yearid = 2000)
 	UNION 
 	SELECT playerid, yearid, salary FROM salaries WHERE yearid = 2001 AND salary = (SELECT max(salary) from salaries WHERE yearid = 2001)
-)
+))
 	
-	SELECT p.playerid, p.namefirst, p.namelast, t.salary, t.yearid FROM twothou AS t INNER JOIN people AS p ON p.playerid = t.playerid
+	SELECT p.playerid, p.namefirst, p.namelast, t.salary, t.yearid FROM TWOTHOU AS t INNER JOIN people AS p ON p.playerid = t.playerid
 ;
 
 -- Question 4v
 CREATE VIEW q4v(team, diffAvg) AS
-	--WITH ALLSTARSALARY AS (SELECT playerid, salary, team)
-  SELECT 1, 1 -- replace this line
+ 	SELECT allstarfull.teamid AS team, MAX(s.salary) - MIN(s.salary) AS diffAvg FROM allstarfull INNER JOIN salaries AS s 
+	ON allstarfull.playerid = s.playerid 
+	WHERE allstarfull.yearid = 2016 AND allstarfull.yearid = s.yearid 
+	GROUP BY allstarfull.teamid 
+	ORDER BY allstarfull.teamid
+
 ;
+
 
 -- connect player id with salary and team 
 -- for each team in 2016
-
-
 
 
 
