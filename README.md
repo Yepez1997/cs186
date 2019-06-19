@@ -4,5 +4,5 @@
 Various SQL Queries ranging from simple implementaions -> difficult
 
 ## proj 2
-B+ tree implementaion 
+B+ tree implementaion in JAVA
 
