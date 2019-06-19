@@ -188,3 +188,12 @@ CREATE VIEW q4v(team, diffAvg) AS
 
 
 
+
+
+
+
+With as TABLE NAME ()
+
+
+
+
